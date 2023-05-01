@@ -1,0 +1,32 @@
+@NAME(FIRST_QUERY)
+  select ROW_NUMBER() OVER (ORDER by cbh.thoi_gian_key) as id,
+  cbh.khach_hang_key,
+  cbh.thoi_gian_key,
+  cbh.mat_hang_key,
+  cbh.cua_hang_key,
+  cbh.tong_sl,
+  cbh.tong_dt,
+  dtg.thang,
+  dtg.quy,
+  dtg.nam
+  from cube_ban_hang as cbh
+  inner join dim_thoi_gian as dtg on cbh.thoi_gian_key = dtg.thoi_gian_key
+  where
+    cbh.thoi_gian_key is not null
+    and cbh.khach_hang_key is null
+    and cbh.mat_hang_key is null
+    and cbh.cua_hang_key is null
+    and dtg.nam = :year
+
+@NAME(SECOND_QUERY)
+  select
+  sum(cbh.tong_sl) as TongSL ,
+  sum(cbh.tong_dt) as TongDT
+  from cube_ban_hang as cbh
+  inner join dim_thoi_gian as dtg on cbh.thoi_gian_key = dtg.thoi_gian_key
+  where
+  cbh.thoi_gian_key is not null
+  and cbh.khach_hang_key is null
+  and cbh.mat_hang_key is null
+  and cbh.cua_hang_key is null
+  and dtg.nam = :year
